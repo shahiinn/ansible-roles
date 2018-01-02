@@ -1,0 +1,43 @@
+---
+##enable below lines for apt-get installations
+#- name: debian | Adding Cassandra Debian Repo Key
+#  apt_key:
+#    url: "{{ cassandra_debian_repo_info.repo_key }}"
+#    validate_certs: no
+#    state: "present"
+
+#- name: debian | Adding Cassandra Debian Repo
+#  apt_repository:
+#    repo: "{{ cassandra_debian_repo_info.repo }}"
+#    state: "present"
+
+#- name: Install Cassandra
+#  apt: pkg=cassandra={{ cassandra_version }} state=present update-cache=yes force=yes
+#  register: cassandra_install
+#  tags:
+#    - packages
+
+
+
+####Installing from tarball, then uncomment below lines
+  - name: Installing Cassandra
+    get_url: 
+      url: https://archive.apache.org/dist/cassandra/{{ cassandra_version }}/apache-cassandra-{{ cassandra_version }}-bin.tar.gz
+      dest: '{{ cassandra_installation_directory }}'
+      validate_certs: no
+      owner: "ubuntu"
+      group: "ubuntu"
+
+
+  - name: unarchive tarball
+    unarchive: src={{ cassandra_installation_directory }}/apache-cassandra-{{ cassandra_version }}-bin.tar.gz
+               dest={{ cassandra_installation_directory }}
+               copy=no
+               owner=ubuntu
+               group=ubuntu
+
+
+  - name: remove tarball
+    file: state=absent path={{ cassandra_installation_directory }}/apache-cassandra-{{ cassandra_version }}-bin.tar.gz
+
+

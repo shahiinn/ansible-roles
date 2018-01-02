@@ -1,0 +1,28 @@
+---
+#Playbook to copy the component(files,artifacts etc) to the remote machine
+- name: checking if the service is implemented or not
+  stat:
+    path: '{{ SERVICE_DEST }}/{{ SERVICE_NAME }}'
+  register: init
+
+- name: copying the configuration file
+  template:
+    src: '{{ PROPERTY_SRC }}'
+    dest: '{{ PROPERTY_DEST }}'
+    mode: 444
+    owner: '{{ USER }}'
+  when: COPY_CONFIG
+
+- name: copying the component
+  copy: 
+    src: '{{ JAR_SRC }}' #<source: in local machine, from where we need to copy the code>
+    dest: '{{ JAR_DEST }}' #<dest: in remote machine, where we need to put the code>
+    owner: '{{ USER }}'
+    mode: '{{ MODE }}'
+  when: init.stat.exists == true
+  notify: start jar
+
+- name: wait for service to start
+  wait_for:
+    port: '{{ PORT }}'
+    delay: 10

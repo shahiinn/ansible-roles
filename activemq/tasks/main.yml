@@ -1,0 +1,12 @@
+#Including required tasks
+- include: apt.yml
+  when: amq_install_mode == "apt"
+
+- include: download.yml
+  when: amq_install_mode == "tarball"
+
+- include: service.yml
+  when: amq_service == "yes" and amq_install_mode == "tarball"
+
+- include: start.yml
+  when: amq_service == "no" and amq_install_mode == "tarball"

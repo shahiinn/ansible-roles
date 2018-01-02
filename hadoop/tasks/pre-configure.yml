@@ -1,0 +1,56 @@
+---
+- name: Check install directory present or not
+  stat: path={{ hadoop_install_dir }}
+  register: location
+
+- name: Check store directory present or not
+  stat: path={{ hadoop_store_dir }}
+  register: store
+
+- name: Creating user group if not exists
+  group: name={{ hadoop_group }}  state=present
+
+- name: Creating user if not exists
+  user: 
+    name: "{{ hadoop_user }}"
+    shell: /bin/bash 
+    group: "{{ hadoop_group }}" 
+    append: yes
+
+- name: Creating install directory if not present
+  file:
+    path: "{{ hadoop_install_dir }}"
+    state: directory
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    recurse: yes
+    mode: 0755
+  when: location.stat.exists == false
+
+#- name: Allow {{ hadoop_group }} group to have passwordless sudo
+#  lineinfile:
+#    dest: /etc/sudoers
+#    state: present
+#    regexp: '^%{{ hadoop_group }}'
+#    line: '%{{ hadoop_group }} ALL=(ALL:ALL) NOPASSWD:ALL'
+#  become: yes
+#  become_method: sudo
+
+- name: Creating store directory if not present
+  file: 
+    path: "{{ hadoop_store_dir }}"
+    state: directory
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    recurse: yes
+    mode: 0755
+  when: store.stat.exists == false
+
+#- name: Changing temporary file permission
+#  file:
+#    path: /tmp
+#    mode: 0777
+#    owner: "{{ hadoop_user }}"
+#    group: "{{ hadoop_group }}"
+#    recurse: yes
+ 

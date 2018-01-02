@@ -1,0 +1,4 @@
+- name: start service 
+  service:
+    name: '{{ SERVICE_NAME }}'
+    state: restarted

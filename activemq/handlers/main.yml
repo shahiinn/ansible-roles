@@ -1,0 +1,11 @@
+---
+#Handler for manual starting
+- name: start amq
+  command: "{{ amq_home_dir }}/bin/activemq start"
+
+#Handler for starting service
+- name: Starting amq service
+  service:
+    name: activemq
+    state: started
+

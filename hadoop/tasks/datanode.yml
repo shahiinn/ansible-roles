@@ -1,0 +1,117 @@
+---
+#Copying public key to all datanodes
+- name: Copying keyfile to all datanodes
+  copy:
+    src: "{{ hadoop_keylocation }}/{{ hadoop_keyfile }}.pub"
+    dest: "/home/{{ hadoop_user }}/.ssh"
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    mode: 0600
+  when: inventory_hostname in groups[newdatanode_group]
+
+#Adding public key of all datanode to authorized_keys file 
+- name: Adding keyfile to all datanodes authorized_keys file
+  shell: "cat /home/{{ hadoop_user }}/.ssh/{{ hadoop_keyfile }}.pub >> /home/{{ hadoop_user }}/.ssh/authorized_keys"
+  when: inventory_hostname in groups[newdatanode_group]
+
+#Creating datanode directory in all datanode server
+- name: Creating datanode directory
+  file: 
+    path: "{{ hadoop_store_dir }}/hdfs/datanode"
+    state: directory
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    mode: 0755
+    recurse: yes
+  when: inventory_hostname in groups[newdatanode_group]
+
+#Creating temporary directory in all server
+- name: Creating temporaray directory
+  file:
+    path: "{{ hadoop_store_dir }}/tmp"
+    state: directory
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    mode: 0755
+    recurse: yes
+  when: inventory_hostname in groups[newdatanode_group]
+
+#Copying core-site file to all servers
+- name: Copying core-site file
+  template:
+    src: core-site.xml.j2
+    dest: "{{ hadoop_home_dir }}/etc/hadoop/core-site.xml"
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    mode: 0644
+  when: inventory_hostname in groups[newdatanode_group]
+
+#Copying hdfs-site file for datanodes
+- name: Copying hdfs-site file for datanode
+  template:
+    src: hdfs-site.xml-datanode.j2
+    dest: "{{ hadoop_home_dir }}/etc/hadoop/hdfs-site.xml"
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    mode: 0644
+  when: inventory_hostname in groups[newdatanode_group]
+
+#Copying slaves file to namenode
+- name: Copying slave file
+  template:
+    src: slaves
+    dest: "{{ hadoop_home_dir }}/etc/hadoop/slaves"
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    mode: 0644
+  when: ansible_nodename == hadoop_namenode
+
+- name: Find java version
+  command: java -version 2>&1 | head -n 1 | awk -F '.' '{print $2}'
+  register: version
+
+- set_fact: java_version= {{ version }}
+
+#To find java_home for redhat
+- name: Find java_home for redhat
+  find:
+    path: "/usr/lib/jvm"
+    patterns: "^java-1.{{ java_version }}.0-*"
+    file_type: directory
+    recurse: yes
+    use_regex: True
+  register: redhat
+  when: ansible_distribution == "RedHat"
+
+
+- name: Find java_home for ubuntu
+  find:
+    path: "/usr/lib/jvm"
+    patterns: "^java-{{ java_version }}-*"
+    file_type: directory
+    recurse: yes
+    use_regex: True
+  register: ubuntu
+  when: ansible_distribution == "Ubuntu" and inventory_hostname in groups[newdatanode_group]
+
+
+#Adding java home to hadoop-env file of all servers
+- name: Adding java_home to hadoop-env file for ubuntu
+  lineinfile:
+    dest: "{{ hadoop_home_dir }}/etc/hadoop/hadoop-env.sh"
+    regexp: "JAVA_HOME="
+    line: "export JAVA_HOME={{ item.path }}"
+  with_items: "{{ ubuntu.files }}"
+  notify: Start datanode
+  when: ansible_distribution == "Ubuntu" and inventory_hostname in groups[newdatanode_group]
+
+- name: Adding java_home to hadoop-env file for redhat
+  lineinfile:
+    dest: "{{ hadoop_home_dir }}/etc/hadoop/hadoop-env.sh"
+    regexp: "JAVA_HOME="
+    line: "export JAVA_HOME={{ item.path }}/jre"
+  with_items: "{{ redhat.files }}"
+  when: ansible_distribution == "RedHat" and  inventory_hostname in groups[newdatanode_group]
+  notify: Start datanode
+
+

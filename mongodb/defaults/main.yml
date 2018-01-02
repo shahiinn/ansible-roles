@@ -1,0 +1,15 @@
+---
+KEYSERVER: keyserver.ubuntu.com
+KEY_ID: 0C49F3730359A14518585931BC711F9BA15703C6
+MONGODB_REPO_14: "deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.4 multiverse"
+MONGODB_REPO_16: "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.4 multiverse"
+APT_PACKAGE: mongodb-org
+MONGODB_USER: mongodb
+MONGODB_GROUP: mongodb
+MONGODB_DB_PATH: "/opt/mongo-data"
+MONGODB_LOG_PATH: "/opt/mongo-log"
+MONGODB_LOG_FILE: "my_custom_logs"
+REPLICA_SET_NAME: "mongo-repl"
+PORT: "27017"
+BIND_IP: "0.0.0.0"
+REPLICATION_MODE: "false"

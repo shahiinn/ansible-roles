@@ -1,0 +1,25 @@
+---
+- name: Hadoop {{ hadoop_install_mode }} installation
+  gather_facts: yes
+  hosts: hadoop,newdatanode
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  vars:
+    install_mode: 'cluster'
+    replication_factor: 3
+    block_size: 512m
+    install_dir: /data
+    user: ubuntu
+    group: ubuntu
+    data_dir: /data/hadoop_store
+    version_major: 2
+    version_minor: 7
+    version_patch: 3
+
+    namenode_group: namenode
+    newdatanode_group: newdatanode
+    hadoop_parent: hadoop
+  roles:
+    - java-8
+    - hadoop-test

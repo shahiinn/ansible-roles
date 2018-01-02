@@ -1,0 +1,18 @@
+---
+- name: Create user
+  user:
+    name: '{{ USER }}'
+    state: present
+    shell: '{{ USERSHELL }}'
+    home: '{{ USERHOME }}'
+  when: CREATE_USER
+- name: Creating the directory skeleton
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: '{{ USER }}'
+    group: '{{ USER }}'
+    recurse: yes
+    mode: '{{ MODE }}'
+  with_items:
+    - '{{ DIRECTORIES }}'

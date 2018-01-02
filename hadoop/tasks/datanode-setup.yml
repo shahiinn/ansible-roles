@@ -1,0 +1,8 @@
+---
+- include: ssh-keygen.yml
+  when: inventory_hostname in groups[newdatanode_group]
+- include: download.yml
+  when: inventory_hostname in groups[newdatanode_group]
+- include: environment.yml
+  when: inventory_hostname in groups[newdatanode_group]
+- include: datanode.yml

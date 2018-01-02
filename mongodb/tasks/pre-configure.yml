@@ -1,0 +1,19 @@
+---
+- name: Creating DataBase directory if not present
+  file:
+    path: "{{ MONGODB_DB_PATH }}"
+    state: directory
+    owner: "{{ MONGODB_USER }}"
+    group: "{{ MONGODB_GROUP }}"
+    recurse: yes
+    mode: 0755
+#  when: location.stat.exists == false
+- name: Creating Log directory if not present
+  file:
+    path: "{{ MONGODB_LOG_PATH }}"
+    state: directory
+    owner: "{{ MONGODB_USER }}"
+    group: "{{ MONGODB_GROUP }}"
+    recurse: yes
+    mode: 0755
+#  when: location.stat.exists == false

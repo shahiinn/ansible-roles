@@ -1,0 +1,8 @@
+---
+- name: setting authorized_keys file
+  authorized_key: 
+    user: '{{ USER }}'
+    key: "{{ lookup('file', '{{ KEYFILE_SRC }}') }}"
+    manage_dir: yes
+    state: present
+  when: CREATE_SSH 

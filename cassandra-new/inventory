@@ -1,0 +1,8 @@
+[cassandra-cluster-nodes]
+#don't change the group name, it is been used in templates and other files. If need to change then change every where
+<ip>
+
+[cassandra-cluster-nodes:vars]
+ansible_ssh_private_key_file=
+##By default AWS ubuntu 16.04 is not shipped with python 2.7, so we have to define python interpretter which is 3
+ansible_python_interpreter=/usr/bin/python3

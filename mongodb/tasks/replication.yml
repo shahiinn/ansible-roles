@@ -1,0 +1,28 @@
+
+
+- name: MongoDB | Editing the Configuration file
+  lineinfile:
+    path: /etc/mongod.conf
+    regexp: '^#replication:'
+    line: 'replication:'
+- name: MongoDB | Adding ReplicaSet Name to the Configuration file
+  lineinfile:
+    path: /etc/mongod.conf
+    insertafter: '^replication:'
+    line: '   replSetName: {{ REPLICA_SET_NAME }}'
+- name: MongoDB | Ensure Service is running
+  service:
+    name: mongod
+    state: restarted
+- name: MongoDB | Initiate Replication Setup 
+  shell: mongo --port {{ PORT }} --eval "rs.initiate();"
+  when: inventory_hostname in groups['primary']
+
+- name: MongoDB | Adding Replica Nodes
+  shell: mongo --port {{ PORT }} --eval "rs.add('{{ hostvars[item]["ansible_hostname"] }}:{{ PORT }}');"
+  with_items: '{{ groups.replica }}'
+  when: inventory_hostname in groups['primary']
+
+- name: MongoDB | Making Primary Node Permanent
+  shell: mongo --port {{ PORT }} --eval "cfg = rs.conf();cfg.members[0].priority = 2;rs.reconfig(cfg);"
+  when: inventory_hostname in groups['primary']

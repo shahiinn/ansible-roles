@@ -1,0 +1,42 @@
+---
+#Creating activemq as service 
+- name: Creating activemq service script
+  copy:
+    src: "{{ amq_home_dir }}/bin/env"
+    dest: /etc/default/activemq
+    owner: root
+    group: root
+    mode: 0644
+
+#Enter username value in 'env' file
+#- name: Add username in env file
+#  command: sed -i '~s/^ACTIVEMQ_USER=""/ACTIVEMQ_USER="ubuntu"/' /etc/default/activemq
+#- name: Adding username to run activemq
+#  lineinfile:
+#    name: /etc/default/activemq
+#    regexp: 'ACTIVEMQ_USER=" "'
+#    line: 'ACTIVEMQ_USER="{{ amq_user }}"'
+
+
+- name: Copying env script to /etc/default
+  template:
+    src: env.j2
+    dest: /etc/default/activemq
+    owner: "{{ amq_user }}"
+    group: "{{ amq_group }}"
+    mode: 0644
+
+#Create a link from activemq /etc/init.d
+- name: Creating link to Init.d
+  file:
+    src: "{{ amq_home_dir }}/bin/activemq"
+    dest: "/etc/init.d/activemq"
+    owner: root
+    group: root
+    mode: 0755
+    state: link
+
+#Enable activemq service in default run levels
+- name: Enabling activemq service in defualt run levels
+  command: update-rc.d activemq defaults
+  notify: Starting amq service

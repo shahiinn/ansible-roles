@@ -1,0 +1,7 @@
+---
+- include: download.yml
+- include: cluster-config.yml
+- include: ssh-keygen.yml
+- include: ssh-keyscan.yml
+- include: environment.yml
+- include: start-hadoop.yml

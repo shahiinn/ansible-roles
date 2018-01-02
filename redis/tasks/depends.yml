@@ -1,0 +1,21 @@
+---
+#install dependencies
+- name: Update apt - repository
+  apt:
+    update_cache: yes
+
+- name: Install package - build-essential
+  apt:
+    name: build-essential
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install package- tcl8.5
+  apt:
+    name: tcl8.5
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+

@@ -1,0 +1,3 @@
+- include: prereq.yml
+- include: download.yml
+- include: configure.yml 

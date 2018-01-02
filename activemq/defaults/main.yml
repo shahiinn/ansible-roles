@@ -1,0 +1,24 @@
+---
+#Default variable list for installing active-mq
+amq_install_mode: "tarball"
+amq_user: ubuntu
+amq_group: ubuntu
+amq_port: 8161
+amq_install_dir: /opt
+amq_home_dir: "{{ amq_install_dir }}/apache-activemq-{{ amq_version }}"
+amq_skip_checksum: true
+amq_url_prefix: "http://archive.apache.org/dist/activemq"
+#Enter exact version to install
+amq_version_major: "5"
+amq_version_minor: "13"
+amq_version_patch: "4"
+amq_version: "{{ amq_version_major }}.{{ amq_version_minor }}.{{ amq_version_patch }}"
+#List out all supported checksums here.
+amq_checksums:
+  - { version: "5.13.3" , checksum: "md5:05e4c36bc109a0dc3d0bab74ec202787" }
+  - { version: "5.13.5" , checksum: "md5:07285ffcc6921ac87018af26f3718522" }
+amq_url: "{{ amq_url_prefix }}/{{ amq_version }}/apache-activemq-{{ amq_version }}-bin.tar.gz"
+
+#If you want amq as service give 'yes'.
+amq_service: "yes"
+

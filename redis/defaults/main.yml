@@ -1,0 +1,21 @@
+---
+redis_url: "http://download.redis.io/redis-stable.tar.gz"
+redis_install_dir: "/opt/"
+redis_home_dir: "{{ redis_install_dir }}/redis-stable"
+redis_user: ubuntu
+redis_group: ubuntu
+
+#service variables
+
+redis_port: 6379
+redis_config_dir: "/etc/redis"
+redis_data_dir: "/var/redis"
+daemonize: "yes"
+pidfile: "/var/run/redis_{{ redis_port }}.pid"
+#Loglevels: degub|verbose|notice|warninig
+loglevel: debug
+logfile: "/var/log/redis_{{ redis_port }}.log"
+dir: "/var/redis/{{ redis_port }}"
+protected_mode: "no"
+
+bind_address: "{{ ansible_default_ipv4['address'] }}"	

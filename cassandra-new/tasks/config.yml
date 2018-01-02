@@ -1,0 +1,16 @@
+---
+- name: Changing User permissions
+  file: 
+    dest: "{{ cassandra_root_dir }}" 
+    owner: ubuntu
+    group: ubuntu
+    recurse: yes
+
+- name: config | Configuring Cassandra
+  template:
+    src: "cassandra.yaml.j2"
+    dest: "{{ cassandra_root_dir }}/conf/cassandra.yaml"
+    owner: "ubuntu"
+    group: "ubuntu"
+    mode: 0644
+  notify: "restart cassandra"

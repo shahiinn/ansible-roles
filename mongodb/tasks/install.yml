@@ -1,0 +1,28 @@
+---
+- name: MongoDB | Add  apt key
+  apt_key:
+    keyserver: "{{ KEYSERVER }}"
+    id: "{{ KEY_ID }}"
+
+- name: MongoDB | Add APT repository
+  apt_repository:
+    repo: "{{ MONGODB_REPO_14 }}"
+    state: present
+  when: ansible_distribution_version == "14.04"
+
+- name: MongoDB | Add APT repository 16.04
+  apt_repository:
+    repo: "{{ MONGODB_REPO_16 }}"
+    state: present
+  when: ansible_distribution_version == "16.04"
+
+- name: MongoDB | Install MongoDB
+  apt:
+    pkg: "{{ APT_PACKAGE }}"
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: MongoDB | Ensure Service is running
+  service:
+    name: mongod
+    state: started

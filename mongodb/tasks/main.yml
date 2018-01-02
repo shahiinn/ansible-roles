@@ -1,0 +1,7 @@
+---
+
+- include: install.yml
+- include: pre-configure.yml
+- include: configure.yml
+#- include: replication.yml
+#  when: REPLICATION_MODE == "true"

@@ -1,0 +1,30 @@
+---
+##this is for ubuntu 16.04. By default python 2.7 and minor version prior to 3 is not installed
+##cassandra requires python 2.7 for running cqlsh
+
+- name: Install the dependency python package 
+  apt:
+    name: python
+    state: present
+
+- name: Creating Installation Directory
+  file:
+    path: '{{ cassandra_installation_directory }}'
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: 0755
+
+
+#- name: Formatting the volume
+#  filesystem:
+#    dev: "/dev/xvdb"
+#    fstype: "ext4"
+
+#- name: Mounting the Volume
+#  mount:
+#    name: "/data"
+#    src: "/dev/xvdb"
+#    fstype: "ext4"
+#    state: mounted
+

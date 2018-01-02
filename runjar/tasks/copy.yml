@@ -1,0 +1,16 @@
+---
+- name: Copying jar file from local to remote server
+  copy:
+    src: "{{ artifact_path }}/{{ artifact_name }}"
+    dest: "{{ remote_location }}"
+    owner: "{{ remote_user }}"
+    group: "{{ remote_group }}"
+    mode: 755
+#- name: Copying application.properties to remote server
+#  template:
+#    src: "{{ artifact_path }}/application.properties.j2"
+#    dest: "{{ remote_location }}"
+#    owner: "{{ remote_user }}"
+#    group: "{{ remote_group }}"
+#    mode: 755
+  notify: start jar

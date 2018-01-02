@@ -1,0 +1,5 @@
+---
+- name: Starting redis-server
+  service: 
+    name: "redis_{{ redis_port }}"
+    state: started

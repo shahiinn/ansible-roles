@@ -1,0 +1,15 @@
+---
+- name: Creating Directory for Kubernetes
+  file:
+    path: "{{ kubernetes_dir }}"
+    state: directory
+    owner: "{{ kubernetes_user }}"
+    group: "{{ kubernetes_group }}"
+    mode: 0755
+    recurse: yes
+
+- name: Download Kubernetes
+  git:
+    repo: "{{ kubernetes_repo }}"
+    dest: "{{ kubernetes_dir }}"
+  register: download

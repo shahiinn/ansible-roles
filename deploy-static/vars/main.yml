@@ -1,0 +1,18 @@
+---
+
+#Static files 
+SRC: /ebs/deployment/codebases/DTP/DTP-dev-frontend/visualization/client/__build__
+DEST: /opt/bigbrain-frontend
+MODE: 0755
+USER: dtadmin
+
+
+#Variables related to the service
+SETUP_SERVICE: false  #Set this value to true if you are going to setup as service to run any nodejs server
+SERVICE_NAME: 
+SERVICE_DEST:
+COMMAND_NAME:
+PID_FILE_LOC: 
+PORT: 
+
+

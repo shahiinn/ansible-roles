@@ -1,0 +1,16 @@
+---
+artifact_path: ../files/
+artifact_name: Main.jar
+remote_location: /ebs
+remote_source: "{{ remote_location }}/{{ artifact_name }}"
+remote_user: devops
+remote_group: devops
+remote_command: "nohup java -jar {{ remote_source }} &"
+#BASE_INPUT_DIR: /base/path/
+#CONFIG_PATH: /path/to/config/
+#VIEWS_TO_PROCESS: CC,CRM
+#REDIS_HOST: localhost
+#REDIS_PORT: 6379
+#PROCESSED_DIR: /move/processed_files/here/
+#ERROR_DIR: /move/error_files/here/
+

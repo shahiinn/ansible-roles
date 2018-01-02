@@ -1,0 +1,42 @@
+---
+- name: Copying slave file for keyspace
+  command: "cp {{ hadoop_home_dir }}/etc/hadoop/slaves {{ hadoop_install_dir }}"
+  when: ansible_nodename == hadoop_namenode
+- name: Changing file permissions
+  file: 
+    path: "{{ hadoop_install_dir }}/slaves"
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    mode: 0755
+  when: ansible_nodename == hadoop_namenode
+
+- name: Adding lines in slaves file
+  lineinfile:
+    dest: "{{ hadoop_install_dir }}/slaves"
+    line: "{{ item }}"
+  with_items:
+    - 0.0.0.0
+    - localhost
+    - "{{ hadoop_namenode }}"
+  when: ansible_nodename == hadoop_namenode
+
+- name: Copying slave file to ansible server
+  fetch:
+    src: "{{ hadoop_install_dir }}/slaves"
+    dest: /tmp/slaves
+    flat: yes
+  when: ansible_nodename == hadoop_namenode
+
+- name: Creating known_hosts file if not present
+  file:
+    path: "/home/{{ hadoop_user }}/.ssh/known_hosts"
+    state: touch
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    mode: 0755    
+
+- name: accept new ssh fingerprints
+  shell: "ssh-keyscan -H -t ecdsa-sha2-nistp256 {{ item }} >> /home/{{ hadoop_user }}/.ssh/known_hosts"
+  with_lines:
+    - " cat /tmp/slaves"
+  when: ansible_nodename == hadoop_namenode

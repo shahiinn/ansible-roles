@@ -1,0 +1,19 @@
+---   
+- name: CREATING THE DIRECTORY
+  file:
+    path: "{{ MOUNT_PATH }}"
+    state: directory
+    recurse: yes
+
+- name: Formatting the volume
+  filesystem:
+        dev: "{{ MOUNT_VOLUME }}"
+        fstype: "{{ VOLUME_FORMAT }}"
+
+- name: Mounting the Volume
+  mount:
+        name: "{{ MOUNT_PATH }}"
+        src: "{{ MOUNT_VOLUME }}"
+        fstype: "{{ VOLUME_FORMAT }}"
+        state: mounted
+

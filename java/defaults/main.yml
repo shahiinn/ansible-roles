@@ -1,0 +1,12 @@
+---
+#COMMON VARIABLES
+#Specify the version to install 
+java_version: 8
+
+# UBUNTU VARIABLES
+apt_cache_valid_time: 600
+apt_java_repo: ppa:webupd8team/java
+apt_java_package: oracle-java8-installer
+
+# REDHAT VARIABLES
+

@@ -1,0 +1,8 @@
+---
+- include: download.yml
+- include: environment.yml
+- include: single-node-config.yml
+- include: ssh-keygen.yml
+- include: ssh-keyscan.yml
+- include: start-hadoop.yml
+

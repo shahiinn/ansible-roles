@@ -1,0 +1,5 @@
+---
+- name: start jar
+  service:
+    name: '{{ SERVICE_NAME }}'
+    state: restarted 

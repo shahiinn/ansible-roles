@@ -1,0 +1,4 @@
+---
+MOUNT_PATH: /data
+MOUNT_VOLUME: /dev/xvdf
+VOLUME_FORMAT: ext4

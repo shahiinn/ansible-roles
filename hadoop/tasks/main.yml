@@ -1,0 +1,8 @@
+- include: pre-configure.yml
+- include: hosts.yml
+- include: cluster-setup.yml
+  when: hadoop_install_mode == 'cluster'
+- include: single-node-setup.yml
+  when: hadoop_install_mode == 'single' and ansible_nodename ==  hadoop_namenode
+- include: datanode-setup.yml
+  when: hadoop_install_mode == 'datanode'

@@ -1,0 +1,5 @@
+{% for host in groups[hadoop_parent] %}
+{% if hostvars[host]['ansible_nodename'] != hadoop_namenode %}
+{{ hostvars[host]['ansible_nodename'] }}
+{% endif %}
+{% endfor %}

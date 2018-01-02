@@ -1,0 +1,30 @@
+---
+#Source and Destination of Jar executables
+JAR_NAME: visualization-1.0-SNAPSHOT.jar
+JAR_SRC: '/ebs/deployment/codebases/DTP/DTP-dev/visualization/output/module/{{ JAR_NAME }}' #<LIST OF SOURCE FILES
+JAR_DEST: /opt/bigbrain-backend
+
+USER: dtadmin #<OWNER OF THE FILES/DIRECTORIES>
+MODE: 0755 #<MODE TO USE>
+#process to restart
+SERVICE_DEST: /etc/init.d
+SERVICE_NAME: dtp #<NAME OF THE SERVICE>
+SERVICE_DESCRIPTION: "service to start the jar of deep think propeller" #<GIVE THE DESCRIPTION OF ABOUT THE SERVICE> 
+#use this if any service is implemented
+COMMAND_NAME: "java -jar {{ JAR_DEST }}/{{ JAR_NAME }}" #<COMMAND TO PUT IN SERVICE SCRIPT>
+PID_FILE_LOC: /var/run #<SERVICE PID FILE LOCATION>
+PORT: 8080
+
+#Variables related to application properties
+COPY_CONFIG:
+PROPERTY_SRC:
+PROPERTY_DEST:
+APP_NAME:
+APP_DESCRIPTION:
+APP_VERSION:
+APP_LOG_LOCATION:
+LOG_LEVEL:
+APP_BASE_PATH:
+DATASOURCE_USERNAME:
+DATASOURCE_PASSWORD:
+

@@ -1,0 +1,22 @@
+---
+- name: checking if init script is present
+  stat:
+    path: '{{ SERVICE_DEST }}/{{ SERVICE_NAME }}'
+  register: init_file
+
+- name: copying the service script to the remote machine
+  template:
+    src: service-script.j2
+    dest: '{{ SERVICE_DEST }}/{{ SERVICE_NAME }}'
+    owner: root
+    mode: 0777
+  register: init
+  when: init_file.stat.exists == false
+
+- name: Initalising the init script
+  service:
+    name: '{{ SERVICE_NAME }}'
+    enabled: true
+  when: init.changed == true
+
+

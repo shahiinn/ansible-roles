@@ -1,0 +1,12 @@
+---
+- name: Start hadoop
+  command: "{{ hadoop_home_dir }}/sbin/start-dfs.sh"
+  become: true
+  become_user: "{{ hadoop_user }}"
+
+- name: Start datanode
+  command: "{{ hadoop_home_dir }}/sbin/hadoop-daemon.sh start datanode"
+  become: true
+  become_user: "{{ hadoop_user }}"
+
+

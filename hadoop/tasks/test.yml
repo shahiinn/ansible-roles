@@ -1,0 +1,13 @@
+---
+- name: Find java_home for redhat
+  find:
+    path: "/usr/lib/jvm"
+    patterns: "^java-{{ java_version }}-*"
+    file_type: directory
+    recurse: yes
+    use_regex: True
+  register: ubuntu
+
+- debug:
+    msg: "{{ ubuntu }}"
+

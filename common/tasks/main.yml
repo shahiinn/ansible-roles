@@ -1,0 +1,5 @@
+---
+- include: configure-server.yml
+- include: configuring-ssh.yml
+- include: setenv.yml
+  when: SETENV

@@ -1,0 +1,6 @@
+---
+- include: setup-service.yml
+  when: SETUP_SERVICE
+- include: copystatic.yml
+- include: execute-service.yml
+  when: SETUP_SERVICE 

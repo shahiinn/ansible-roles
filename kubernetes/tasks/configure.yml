@@ -1,0 +1,24 @@
+---
+ - name: Changing LATEST_STABLE_K8S_VERSION
+   lineinfile:
+     dest: "{{ kubernetes_dir }}/docker-multinode/common.sh"
+     regexp: "LATEST_STABLE_K8S_VERSION="
+     line: "LATEST_STABLE_K8S_VERSION=v1.5.3"
+
+ - name: Start Kubernetes in master
+   shell: "{{ kubernetes_dir }}/docker-multinode/master.sh"
+   when: inventory_hostname in groups['master']
+
+
+#   notify: Start Kubernetes in master
+
+ - name: Adding Master IP to nodes
+   lineinfile:
+     dest: "{{ kubernetes_dir }}/docker-multinode/common.sh"
+     line: "export MASTER_IP={{ groups['master'] | list | join(' ') }}"
+   when: inventory_hostname in groups['node']
+#   notify: Start Kubernetes in slaves 
+
+ - name: Start Kubernetes in slave
+   shell: "{{ kubernetes_dir }}/docker-multinode/worker.sh"
+   when: inventory_hostname in groups['node']

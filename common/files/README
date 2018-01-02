@@ -1,0 +1,18 @@
+This directory should contain the following:
+- applcation properties file
+- keyfiles
+- certificate files
+- static configuration files
+- executatble files (shell/python/java)
+
+
+NOTE:
+   While putting keyfile in the directory kindly encrypt them by using the ansible-vault utility. Command to encrypt a file using ansible-vault is as follows:
+        $ ansible-vault encrypt <file-name>
+
+   Provide the encryption password when you are prompted.
+
+   To use the encrypted file in playbooks, execute the ansible-playbook command in the following way:
+       
+       $ ansible-playbook <playbook-name> --ask-vault-pass
+ 

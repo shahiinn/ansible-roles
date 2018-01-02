@@ -1,0 +1,9 @@
+  - name: adding hostname mapping /etc/hosts
+    lineinfile:
+      dest: /etc/hosts
+      #regexp: '^127.0.0.1'
+      insertbefore: '^127.0.0.1'
+      line: '{{ item.0 }} {{ item.1 }}'
+    with_together:
+      - "{{ groups['cassandra-cluster-nodes'] | map('extract', hostvars, ['ansible_default_ipv4', 'address'])| list }}"
+      - "{{ groups['cassandra-cluster-nodes'] | map('extract', hostvars, ['ansible_nodename']) | list }}"

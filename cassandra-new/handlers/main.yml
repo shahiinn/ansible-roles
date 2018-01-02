@@ -1,0 +1,14 @@
+---
+### handlers file for ansible-cassandra for tarball installations
+- name: "restart cassandra"
+  remote_user: ubuntu
+  become: no
+  shell: bash -x {{ cassandra_installation_directory }}/apache-cassandra-{{ cassandra_version }}/bin/cassandra
+  async: 6000
+  poll: 0
+
+##enable below lines for apt installations
+#- name: "restart cassandra"
+#  service:
+#    name: "cassandra"
+#    state: "restarted"

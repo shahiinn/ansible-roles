@@ -1,0 +1,15 @@
+---
+#Building redis package
+#- name: Making pacakge
+#  shell: cd "{{ redis_home_dir }}" && make
+# or Use make module
+- name: Building package
+  make:
+    chdir: "{{ redis_home_dir }}"
+
+# To copy contents from /src to /usr/local/bin
+- name: Installing package
+  make:
+    chdir: "{{ redis_home_dir }}/src"
+    target: install
+  become: yes

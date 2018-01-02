@@ -1,0 +1,11 @@
+---
+- name: start the service
+  shell: echo "starting the service"
+  notify: start service
+
+- name: checking if service started or not
+  wait_for:
+    port: '{{ PORT }}'
+    delay: 10
+    timeout: 120
+

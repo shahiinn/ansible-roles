@@ -1,0 +1,99 @@
+---
+#Checking .ssh directory present in both namenode and datanodes
+- name: Checking .ssh directory present or not
+  stat: path=/home/{{ hadoop_user }}/.ssh
+  register: ssh
+
+#If .ssh directory not present, creating the directory in both namenode and datanode
+- name: Creating .ssh directory if not present
+  file:
+    path: /home/{{ hadoop_user }}/.ssh
+    state: directory
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    mode: 0700
+  when: ssh.stat.exists == False
+
+#Checking authorized_keys file present in both namenode and datanode
+- name: Checking authorized_keys file present or not
+  stat: path=/home/{{ hadoop_user }}/.ssh/authorized_keys
+  register: auth
+# become: yes
+# become_method: sudo
+
+#If authorized_keys file not present, creating in both namenode and datanodes
+- name: Creating authorized_keys file if not present
+  file: 
+    dest: /home/{{ hadoop_user }}/.ssh/authorized_keys
+    state: touch
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    mode: 0600
+  when: auth.stat.exists == False
+
+#Checking old private key are present or not
+- name: Checking private key present with same name or not
+  stat: path=/home/{{ hadoop_user }}/.ssh/{{ hadoop_keyfile }}
+  register: rsa
+#Checking old public key present or not
+- name: Checking public key presnet with same name or not
+  stat: path=/home/{{ hadoop_group }}/.ssh/{{ hadoop_keyfile }}.pub
+  register: pub
+
+#Delting old private key
+- name: Deleting old private key
+  file:
+    dest: "/home/{{ hadoop_user }}/.ssh/{{ hadoop_keyfile }}"
+    state: absent
+  when: rsa.stat.exists and ansible_nodename == hadoop_namenode
+
+#Deleting old public key
+- name: Deleting old public key
+  file:
+    dest: "/home/{{ hadoop_user }}/.ssh/{{ hadoop_keyfile}}.pub"
+    state: absent
+  when: rsa.stat.exists
+
+#Creating ssh key in namenode server
+#- name: Creating SSH key in namnode server
+#  command: ssh-keygen -b 2048 -t rsa -f /home/{{ hadoop_user }}/.ssh/{{ hadoop_keyfile }} -q -N '' -P ""
+#  become: yes
+#  become_user: "{{ hadoop_user }}"
+#  when: ansible_nodename == "{{ hadoop_namenode }}"
+
+#Creating ssh key with useer module
+- name: Creating ssh key in namenode server
+  user: 
+    name: "{{ hadoop_user }}"
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    ssh_key_file: .ssh/id_rsa
+  when: ansible_nodename == hadoop_namenode
+    
+#Adding private key of namenode to namenode's authorized_keys
+#- name: Adding keyfile to authorized_keys in namenode
+#  shell: "cat /home/{{ hadoop_user }}/.ssh/{{ hadoop_keyfile }} >> /home/{{ hadoop_user }}/.ssh/authorized_keys"
+#  when: ansible_nodename == hadoop_namenode
+
+#Downloading public key from namenode server to ansible server
+- name: Downloading public key to ansible server
+  fetch: 
+    src: /home/{{ hadoop_user }}/.ssh/{{ hadoop_keyfile }}.pub
+    dest: "{{ hadoop_keylocation }}/{{ hadoop_keyfile}}.pub"
+    flat: yes
+  when: ansible_nodename == hadoop_namenode
+
+#Copying public key to all datanodes
+- name: Copying keyfile to all datanodes
+  copy:
+    src: "{{ hadoop_keylocation }}/{{ hadoop_keyfile }}.pub"
+    dest: "/home/{{ hadoop_user }}/.ssh"
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    mode: 0600
+  when: ansible_nodename != hadoop_namenode
+
+#Adding public key of all datanode to authorized_keys file 
+- name: Adding keyfile to servers authorized_keys file
+  shell: "cat /home/{{ hadoop_user }}/.ssh/{{ hadoop_keyfile }}.pub >> /home/{{ hadoop_user }}/.ssh/authorized_keys"
+

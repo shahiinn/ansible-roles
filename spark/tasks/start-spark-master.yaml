@@ -1,0 +1,7 @@
+---
+- name: Start spark master
+  command: "{{ SPARK_HOME }}/sbin/start-master.sh"
+  when: inventory_hostname in groups[master]
+  become: true
+  become_user: "{{ SPARK_USER }}"
+  run_once: true

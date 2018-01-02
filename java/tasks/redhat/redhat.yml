@@ -1,0 +1,40 @@
+---
+#Installing  java in redhat OS
+- name: Updating the repo
+  yum: 
+    name: '*'
+    state: latest
+
+- name: Installing java-{{ java_version }}
+  yum: 
+    name: java-1.{{ java_version }}.0-openjdk
+    state: latest
+
+- name: Find module
+  find:
+    path: "/usr/lib/jvm"
+    patterns: "^java-1.{{ java_version }}.0-*"
+    file_type: directory
+    recurse: yes
+    use_regex: True
+  register: result
+
+- name: Set java{{ java_version }} as default
+  alternatives:
+    name: java
+    link: "/usr/bin/java"
+    path: "{{ item.path }}/jre/bin/java"
+  with_items: "{{ result.files }}"
+  
+#    - { path: "{{ result.files }}", exe: 'java' }
+#    - { path: "{{ result.files }}", exe: 'keytool' }
+
+#- name: Set keytool
+#  alternatives:
+#    name: keytool
+#    link: "/usr/bin/keytool"
+#    path: "{{ item.path }}/jre/bin/keytool"
+#  with_items: "{{ result.files }}"
+
+#  become: yes
+

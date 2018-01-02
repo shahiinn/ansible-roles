@@ -1,0 +1,25 @@
+---
+CREATE_USER: true
+USER: deepthink
+USERSHELL: /bin/bash
+USERHOME: /home/deepthink
+DIRECTORIES: 
+  - /opt/bigbrain-backend
+  - /opt/bigbrain-frontend
+MODE: 0755
+KEYFILE_SRC: deepthink-propeller.pub #file should be present in ../files and should be encrypted with ansible-vault
+CREATE_SSH: true
+# Path to the environment file
+ENV_FILE: /etc/environment
+# The environment file owner
+ENV_FILE_OWNER: root
+# The environment file group
+ENV_FILE_GROUP: root
+SETENV: false
+#Environment config
+# environment_config:
+#   LC_ALL: en_US.UTF-8
+#ENV_CONFIG:
+#  my_name: nitanka
+#  WHOISTHI: NITANKA
+

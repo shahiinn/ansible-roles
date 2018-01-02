@@ -1,0 +1,7 @@
+---
+- name: Start new spark slave
+  command: "{{ SPARK_HOME }}/sbin/start-slave.sh spark://{{ SPARK_MASTER_IP }}:{{ SPARK_MASTER_PORT }}"
+  when: inventory_hostname in groups[addslaves]
+  become: true
+  become_user: "{{ SPARK_USER }}"
+

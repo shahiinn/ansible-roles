@@ -1,0 +1,39 @@
+---
+#Create a directory where to store your Redis config files and your data
+- name: Creating config directory
+  file:
+    path: "{{ redis_config_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Creating data directory
+  file:
+    path: "{{ redis_data_dir }}/{{ redis_port }}"
+    owner: root
+    state: directory
+    group: root
+    mode: 0755
+
+- name: Copying init script to /etc/init.d folder
+  template:
+    src: redis_service_script.j2
+    dest: "/etc/init.d/redis_{{ redis_port }}"
+    owner: root
+    group: root
+    mode: 0755
+
+#Copying main configuration file
+- name: Copying configuration file
+  template:
+    src: redis.conf.j2
+    dest: "{{ redis_config_dir }}/{{ redis_port }}.conf"
+    owner: root
+    group: root
+    mode: 0755
+
+#Adding new init script to default run levels
+- name: Adding init script to default run levels
+  shell: cd /etc/init.d/ && sudo update-rc.d redis_{{ redis_port }} defaults
+  notify: Starting redis-server

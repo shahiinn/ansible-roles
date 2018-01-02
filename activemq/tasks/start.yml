@@ -1,0 +1,6 @@
+---
+- stat: path={{ amq_install_dir }}/apache-activemq-{{ amq_version }}
+  register: result
+
+- debug: msg="Path exists and a directory"
+  notify: start amq

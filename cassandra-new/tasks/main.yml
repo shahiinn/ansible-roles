@@ -1,0 +1,9 @@
+---
+# tasks file for ansible-cassandra
+#- include: dependencies.yml
+#- include: adding_hostname.yml
+#- include: debian.yml
+#  when: ansible_os_family == "Debian"
+
+- include: config.yml
+  when: cassandra_config

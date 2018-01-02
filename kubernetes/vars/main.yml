@@ -1,0 +1,4 @@
+kubernetes_dir : kube-deploy
+kubernetes_user : ubuntu
+kubernetes_group : ubuntu
+kubernetes_repo : https://github.com/kubernetes/kube-deploy

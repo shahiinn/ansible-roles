@@ -1,0 +1,22 @@
+# copied from https://github.com/weareinteractive/ansible-ENV.git
+- name: Ensure file exists
+  file:
+    path: "{{ ENV_FILE }}"
+    owner: "{{ ENV_file_owner }}"
+    group: "{{ ENV_file_group }}"
+    state: touch
+  register: ENV_FILE_RESULT
+  changed_when: ENV_FILE_RESULT.diff.before.state != "file"
+
+- name: Remove previous values
+  lineinfile:
+    dest: "{{ ENV_FILE }}"
+    regexp: '^{{ item.key }}'
+    state: absent
+  with_dict: "{{ ENV_CONFIG }}"
+
+- name: Configuring ENV
+  lineinfile:
+    dest: "{{ ENV_FILE }}"
+    line: "{{ item.key }}='{{ item.value }}'"
+  with_dict: "{{ ENV_FILE }}"

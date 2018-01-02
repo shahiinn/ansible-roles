@@ -1,0 +1,9 @@
+---
+- name: copy the static files 
+  copy: 
+    src: '{{ SRC }}'
+    dest: '{{ DEST }}'
+    owner: '{{ USER }}'
+    mode: '{{ MODE }}'
+
+

@@ -1,0 +1,15 @@
+Overview:
+  - To deploy jar to remote machine
+  - To setup a service for the running the Jar
+  - Start the service
+  - Wait for the service to start
+
+Steps:
+  - Copy a Jar from Jenkins to the remote machine.
+  - Copy the init/service script for running the Jar as service.
+  - Start the service, by executing the service. The service will be executed as the user specified in the init script.
+  - Check the port on which the service (jar) is listening.
+
+Supported Platform:
+  - Currently the init script works only on the Ubuntu 14.04, not tested in Ubuntu 16+ and on rpm based linux systems.
+

@@ -1,0 +1,56 @@
+--- 
+#Specify the install mode single | cluster | datanode
+# single --> For single node HDFS setup
+# cluster --> For HDFS cluster setup
+# datanode --> For add new datanode to existing HDFS cluster
+
+hadoop_install_mode: "{{ install_mode }}"
+
+#Enter the hadoop-hdfs replication factor
+hadoop_replication_factor: "{{ replication_factor }}"
+
+#Enter the required block size
+#You can use the following suffix (case insensitive): 
+# - k(kilo) 
+# - m(mega) 
+# - g(giga)
+# - t(tera)
+# - p(peta) 
+# - e(exa) -  to specify the size (such as 128k, 512m, 1g, etc.), 
+#- Or provide complete size in bytes (such as 134217728 for 128 MB).
+
+hadoop_block_size: "{{ block_size }}"
+#Specify the directory to download and install hadoop
+hadoop_install_dir: "{{ install_dir }}"
+
+#Enter the user and group name to configure hadoop
+hadoop_user: "{{ user }}"
+hadoop_group: "{{ group }}"
+
+#Specify the data directory
+hadoop_store_dir: "{{ data_dir }}"
+
+#Enter hadoop version to download
+#For 2.6.0 -> major-2, minor-6, patch-0
+hadoop_version_major: "{{ version_major }}"
+hadoop_version_minor: "{{ version_minor }}"
+hadoop_version_patch: "{{ version_patch }}"
+
+#THIS IS DEFULT VARIABLES DONT CHANGE UNNECESSARILY
+
+#Metion IP address or hostname of namenode
+#hadoop_namenode: "{{ hostvars[groups[namenode_group][0]]['ansible_fqdn'] }}"
+#Using hostname instead of fqdn value
+hadoop_namenode: "{{ hostvars[groups[namenode_group][0]]['ansible_nodename'] }}"
+
+#Mention keyfile name to create ssh key
+hadoop_keyfile: id_rsa
+
+#Enter the location in ansible server to store key
+hadoop_keylocation: /tmp
+
+#Haddop URL to download
+hadoop_version: "hadoop-{{ hadoop_version_major }}.{{hadoop_version_minor }}.{{ hadoop_version_patch }}"
+hadoop_url_prefix: "https://archive.apache.org/dist/hadoop/core"
+hadoop_url: "{{ hadoop_url_prefix }}/{{ hadoop_version }}/{{ hadoop_version }}.tar.gz"
+hadoop_home_dir: "{{ hadoop_install_dir }}/{{ hadoop_version }}"

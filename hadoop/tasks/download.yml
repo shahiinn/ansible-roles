@@ -1,0 +1,34 @@
+---
+#Downloading hadoop package
+#- name: Get namenoe fqdn
+#  shell: /bin/hostname -f
+#  register: hadoop_namenode
+#  when: inventory_hostname in "{{ groups['namenode'] }}"
+- name: Checking hadoop version
+  stat: path={{ hadoop_install_dir }}/{{ hadoop_version }}.tar.gz
+  register: hapresent
+
+- name: Downloading hadoop version hadoop-{{ hadoop_version }}
+  get_url:
+    url: "{{ hadoop_url }}"
+    dest: "{{ hadoop_install_dir }}"
+  register: result
+  until: result|success
+  retries: 5
+  delay: 2
+  when: hapresent.stat.exists == False
+
+
+- name: Extracting package
+  unarchive:
+    src: "{{ hadoop_install_dir }}/{{ hadoop_version }}.tar.gz"
+    dest: "{{ hadoop_install_dir }}"
+    remote_src: true
+
+- name: Changing file permissions
+  file:
+    path: "{{ hadoop_install_dir }}/{{ hadoop_version }}"
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    recurse: yes
+
