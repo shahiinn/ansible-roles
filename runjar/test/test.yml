@@ -1,9 +1,0 @@
----
-- name: To start jar in remote machine
-  hosts: jar
-  remote_user: ubuntu
-  become: yes
-  become_method: sudo 
-  roles:
-    - java-8
-    - run-jar

@@ -1,4 +1,0 @@
----
-- name: start jar
-  command: "{{ remote_command }}"
-
